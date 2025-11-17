@@ -1,0 +1,40 @@
+body{
+    background-color: #fcfbf8;
+    margin: 30px 50px 30px 50px;
+}
+
+h1{
+    font-family: "Jolly Lodger", system-ui;
+    font-weight: 400;
+    font-size: 60px;
+    
+
+    text-align: center;
+    cursor: default;
+}
+
+.main{
+    position: relative;
+}
+
+.menu{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    background-color: #f5f7f1;
+    border: 2px solid black;
+    height: 400px;
+    width: 300px;
+}
+
+.menu_button{
+    box-shadow: 2.5px 5px rgb(189, 188, 188);
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.menu_button:hover{
+    background-color: rgb(189, 183, 183);
+}
