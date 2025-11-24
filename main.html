@@ -23,6 +23,110 @@
             <button type="button" onclick="loadGame()" class="menu_button">Play</button>
             <button type="button" onabort="loadInstructions()" class="menu_button">How to Play?</button>
             <button type="button" onclick="loadSettings()" class="menu_button">Settings</button>
+
+                
+            <script> // A konzol logokat majd nyugodtan törölhetitek, csak csináltam h átlássátok, nem tudom a folyamatot hogyan akarjuk megjeleníteni
+// Kezdő statok
+let ugyesseg = Math.floor(Math.random() * 6) + 7;
+console.log("Saját ügyesség: " + ugyesseg);
+let eletero = Math.floor(Math.random() * 6) + 13;
+console.log("Saját élető: " + eletero);
+let szerencse = Math.floor(Math.random() * 6) + 7;
+console.log("Saját szerencse: " + szerencse);
+
+console.log("----------------");
+
+// Ellenfél statok
+let ellenfeleletero = 10;
+let ellenfelugyesseg = 10;
+
+// Szerencsepróba
+function szerencseProba() {
+    let probaszerencsekocka = Math.floor(Math.random() * 6) + 1 + Math.floor(Math.random() * 6) + 1;
+    if (probaszerencsekocka <= szerencse) {
+        szerencse -= 1;
+        console.log("Sikeres szerencsepróba"); 
+        return true; 
+    } else {
+        console.log("Sikertelen szerencsepróba");
+        return false;
+    }
+}
+
+let probalsze = false // MÉG NINCS AKTIVÁLÁSRA GOMB
+
+// HARC
+while (eletero > 0 && ellenfeleletero > 0) {
+    //támadóerő meghatározás
+    let ellenfeltamadoero = ellenfelugyesseg + Math.floor(Math.random() * 6) + 1 + Math.floor(Math.random() * 6) + 1;
+    let tamadoero = ugyesseg + Math.floor(Math.random() * 6) + 1 + Math.floor(Math.random() * 6) + 1;
+
+    console.log("Te támadóerejed: " + tamadoero);
+    console.log("Ellenfél támadóereje: " + ellenfeltamadoero);
+
+    // támadóerők összehasonlítás
+    if (tamadoero > ellenfeltamadoero) {
+        console.log("Te sebzted meg az ellenfelet!");
+        ellenfeleletero -= 2;
+        console.log("Ellenfél életerő: " + ellenfeleletero);
+
+        
+        if (probalsze) //ha szerencsét próbálsz h többet sebezz
+        {
+            if (szerencseProba()) {
+                console.log("Extra sebzés!");
+                ellenfeleletero -= 2;
+                console.log("Ellenfél életerő: " + ellenfeleletero);
+                probalsze = false
+            }
+
+            else {
+                console.log("karcoltal csak az ellenfélen!");
+                ellenfeleletero += 1;
+                probalsze = false
+            }
+        }
+    }
+
+     else if (ellenfeltamadoero > tamadoero) 
+     {
+        console.log("Az ellenfél sebzett meg téged!");
+        eletero -= 2;
+        console.log("Saját életerő: " + eletero);
+
+            if (probalsze) //ha szerencsét próbálsz h kevesebbet sebezzen
+            {
+             if (szerencseProba())
+              {
+                    console.log("Csökkentett sebzés!");
+                    eletero += 1;
+                    console.log("Saját életerő: " + eletero);
+
+                    probalsze = false
+                }
+                
+             else{
+                    console.log("balszerencse, még 1 sebzés!");
+                    eletero -= 1;
+                    console.log("Saját életerő: " + eletero);
+                    probalsze = false
+                        
+                }
+            }
+    }
+    else {
+        console.log("Kivédtétek egymás csapását következő forduló");
+    }
+
+    console.log("------- Következő forduló ---------");
+}
+                                        
+if (eletero <= 0) {
+    console.log("Vesztettél, az ellenfél legyőzött!");
+} else {
+    console.log("Győztél, az ellenfél legyőzve!");
+}
+            </script>
         </div>
         
     </div>
