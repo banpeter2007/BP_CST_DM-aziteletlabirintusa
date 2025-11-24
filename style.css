@@ -1,40 +1,104 @@
-body{
-    background-color: #fcfbf8;
-    margin: 30px 50px 30px 50px;
+/* Full screen background */
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden; /* no scrollbars */
 }
 
-h1{
-    font-family: "Jolly Lodger", system-ui;
-    font-weight: 400;
-    font-size: 60px;
-    
+body {
+  background-image: url(kepek/background.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 
-    text-align: center;
-    cursor: default;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; 
 }
 
-.main{
-    position: relative;
+
+h1 {
+  font-family: "MedievalSharp", cursive;
+  font-weight: 400;
+  font-size: 60px;
+  text-align: center;
+  cursor: default;
+
+  text-shadow:
+    0 0 10px rgb(255, 255, 138),
+    0 0 20px rgb(255, 255, 138),
+    0 0 40px rgb(255, 255, 138);
+
+  animation: flameFlicker 6s infinite alternate ease-in-out;
+  margin-bottom: 40px;
 }
 
-.menu{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-
-    background-color: #f5f7f1;
-    border: 2px solid black;
-    height: 400px;
-    width: 300px;
+@keyframes flameFlicker {
+  0% {
+    text-shadow:
+      0 0 8px rgb(255, 255, 120),
+      0 0 16px rgb(255, 255, 120),
+      0 0 32px rgb(255, 200, 80);
+  }
+  50% {
+    text-shadow:
+      0 0 12px rgb(255, 255, 150),
+      0 0 24px rgb(255, 255, 150),
+      0 0 48px rgb(255, 220, 100),
+      0 0 72px rgb(255, 180, 50);
+  }
+  100% {
+    text-shadow:
+      0 0 10px rgb(255, 255, 138),
+      0 0 20px rgb(255, 255, 138),
+      0 0 40px rgb(255, 200, 80);
+  }
 }
 
-.menu_button{
-    box-shadow: 2.5px 5px rgb(189, 188, 188);
-    padding: 10px;
-    border-radius: 10px;
-    cursor: pointer;
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+  max-width: 400px;
+  align-items: center;
 }
 
-.menu_button:hover{
-    background-color: rgb(189, 183, 183);
+
+.menu_button {
+  padding: 12px 24px;
+  font-size: 16px;
+  color: rgb(189, 186, 186);
+  font-family: "MedievalSharp", cursive;
+  text-align: center;
+  background-color: rgb(94, 90, 86);
+  border: none;
+  border-radius: 8px;
+  width: 100%;
+  cursor: pointer;
+  transition: transform 0.2s ease, font-size 0.2s ease, background-color 0.2s ease;
+}
+
+.menu_button:hover {
+  background-color: rgb(65, 65, 65);
+  transform: scale(1.05);
+  font-size: 17px;
+}
+
+/* Responsive tweaks */
+@media (max-width: 480px) {
+  h1 { font-size: 36px; }
+  .menu_button { font-size: 14px; padding: 10px 16px; }
+}
+
+@media (max-width: 768px) {
+  h1 { font-size: 48px; }
+  .menu_button { font-size: 15px; padding: 12px 20px; }
+}
+
+@media (min-width: 1200px) {
+  .menu { max-width: 600px; }
+  .menu_button { font-size: 18px; padding: 14px 28px; }
 }
