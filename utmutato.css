@@ -1,0 +1,154 @@
+/* -------------------------------------
+   TARTALMI DOBOZOK (Háttértörténet stb.)
+--------------------------------------- */
+.content_box {
+  width: 90%;
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 30px 40px;
+  background: rgba(50, 40, 35, 0.85); /* barna, átlátszó doboz */
+  border-radius: 12px;
+
+  box-shadow:
+    0 0 20px rgba(255, 240, 180, 0.3),
+    0 0 40px rgba(255, 200, 120, 0.2);
+
+  backdrop-filter: blur(2px);
+
+  animation: fadeIn 1.2s ease;
+}
+
+/* Finom beúszás */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* -------------------------------------
+   CÍMEK DOBOZBAN
+--------------------------------------- */
+.content_box h1 {
+  font-family: "MedievalSharp", cursive;
+  font-size: 42px;
+  margin-top: 0;
+  margin-bottom: 20px;
+  text-align: center;
+
+  color: rgb(255, 236, 150);
+  text-shadow:
+    0 0 8px rgba(255, 220, 120, 0.9),
+    0 0 20px rgba(255, 200, 100, 0.6),
+    0 0 40px rgba(255, 150, 60, 0.4);
+
+  animation: flameSoft 6s infinite alternate ease-in-out;
+}
+
+/* Enyhébb láng-effekt */
+@keyframes flameSoft {
+  0% {
+    text-shadow:
+      0 0 6px rgb(255, 230, 120),
+      0 0 14px rgb(255, 210, 100);
+  }
+  50% {
+    text-shadow:
+      0 0 10px rgb(255, 250, 160),
+      0 0 25px rgb(255, 220, 120),
+      0 0 40px rgb(255, 170, 70);
+  }
+  100% {
+    text-shadow:
+      0 0 8px rgb(255, 236, 150),
+      0 0 18px rgb(255, 210, 120);
+  }
+}
+
+/* -------------------------------------
+   BEKEZDÉSEK
+--------------------------------------- */
+.content_box p {
+  font-size: 18px;
+  line-height: 1.6;
+  color: rgb(230, 220, 210);
+  font-family: "Times New Roman", serif;
+  margin-bottom: 18px;
+  text-indent: 15px;
+}
+
+/* -------------------------------------
+   RESPONSIVE
+--------------------------------------- */
+@media (max-width: 768px) {
+  .content_box {
+    padding: 20px 25px;
+  }
+  .content_box h1 {
+    font-size: 34px;
+  }
+  .content_box p {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .content_box {
+    padding: 18px 20px;
+  }
+  .content_box h1 {
+    font-size: 28px;
+  }
+}
+
+/* --- TELJES KÉPERNYŐS VIDEOHÁTTÉR – ALAP --- */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background: #000; /* biztos ami biztos, videó helyett fekete */
+}
+
+/* --- Maga a videó, teljes képernyőn --- */
+#bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;        /* a videó kitölti a képernyőt */
+  z-index: -1;              /* tartalom mögött */
+  filter: brightness(0.6);  /* sötétítés a jobb olvashatóságért */
+}
+
+/* --- Tartalom, hogy ne tapadjon rá a szélekhez --- */
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  box-sizing: border-box;
+  color: white;
+  position: relative;
+  z-index: 2;
+}
+
+/* --- MOBILON A VIDEÓ AUTOMATIKUSAN KIKAPCSOL --- */
+@media (max-width: 600px) {
+  #bg {
+    display: none; /* videó kikapcsolva mobilon */
+  }
+
+  body {
+    background: url("kepekvideok/background.jpg") no-repeat center center;
+    background-size: cover;
+  }
+}
+
+/* --- NAGY KIJELZŐKRE KICSIT VILÁGOSABB VIDEÓ --- */
+@media (min-width: 1400px) {
+  #bg {
+    filter: brightness(0.75);
+  }
+}
