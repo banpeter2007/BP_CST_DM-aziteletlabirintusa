@@ -28,6 +28,7 @@
       <button type="button" onclick="loadInstructions()" class="menu_button" id="utmutato_button">Útmutató</button>
       <button type="button" onclick="loadSettings()" class="menu_button">Beállítások</button>
       <button type="button" onclick="loadSettings()" class="menu_button">Készítők</button>
+      <button type="button" onclick="closeProgram()" class="menu_button">Bezárás</button>
     </div>
   </div>
 
@@ -61,6 +62,11 @@
     vid.addEventListener('loadedmetadata', () => {
       vid.playbackRate = 0.7; // lassítás
     });
+
+    // closeProgram
+    function closeProgram() {
+      window.close();
+    }
   </script>
 </body>
 </html>

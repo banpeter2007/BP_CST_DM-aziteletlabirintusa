@@ -70,7 +70,7 @@
   font-size: 18px;
   line-height: 1.6;
   color: rgb(230, 220, 210);
-  font-family: "Times New Roman", serif;
+  font-family: "Georgia", serif;
   margin-bottom: 18px;
   text-indent: 15px;
 }
@@ -99,39 +99,30 @@
   }
 }
 
-/* --- TELJES KÉPERNYŐS VIDEOHÁTTÉR – ALAP --- */
+/* Full screen background */
 html, body {
-  height: 100%;
   margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-  background: #000; /* biztos ami biztos, videó helyett fekete */
+  margin-bottom: 20px;
 }
 
-/* --- Maga a videó, teljes képernyőn --- */
-#bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-
-  width: 100%;
-  height: 100%;
-
-  object-fit: cover;        /* a videó kitölti a képernyőt */
-  z-index: -1;              /* tartalom mögött */
-  filter: brightness(0.6);  /* sötétítés a jobb olvashatóságért */
-}
-
-/* --- Tartalom, hogy ne tapadjon rá a szélekhez --- */
 body {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40px 20px;
-  box-sizing: border-box;
-  color: white;
-  position: relative;
-  z-index: 2;
+  justify-content: center; 
+}
+
+/* Videó háttér */
+#bg {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: contain; /* teljes videó látszik */
+  z-index: -1;
+  filter: brightness(0.8); /* sötétítés */
 }
 
 /* --- MOBILON A VIDEÓ AUTOMATIKUSAN KIKAPCSOL --- */
@@ -151,4 +142,51 @@ body {
   #bg {
     filter: brightness(0.75);
   }
+}
+
+.menu_button {
+  padding: 12px 24px;
+  font-size: 16px;
+  color: rgb(189, 186, 186);
+  font-family: "MedievalSharp", cursive;
+  text-align: center;
+  background-color: rgb(94, 90, 86);
+  border: none;
+  border-radius: 8px;
+  width: 100%;
+  cursor: pointer;
+  transition: transform 0.2s ease, font-size 0.2s ease, background-color 0.2s ease;
+}
+
+.menu_button:hover {
+  background-color: rgb(65, 65, 65);
+  transform: scale(1.05);
+  font-size: 17px;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  h1 { font-size: 48px; }
+  .menu_button { font-size: 15px; padding: 12px 20px; }
+  #bg {
+    object-fit: cover; /* mobilon inkább kitölti a képernyőt */
+    filter: brightness(0.6);
+  }
+}
+
+@media (max-width: 480px) {
+  h1 { font-size: 36px; }
+  .menu_button { font-size: 14px; padding: 10px 16px; }
+  #bg {
+    display: none; /* nagyon kis kijelzőn videó helyett kép */
+  }
+  body {
+    background: url('kepekvideok/background.jpg') no-repeat center center;
+    background-size: cover;
+  }
+}
+
+@media (min-width: 1200px) {
+  .menu { max-width: 600px; }
+  .menu_button { font-size: 18px; padding: 14px 28px; }
 }
