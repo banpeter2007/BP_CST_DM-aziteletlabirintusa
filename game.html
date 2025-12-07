@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Page - Az ítélet labirintusa</title>
+    <link rel="stylesheet" href="game.css">
+</head>
+<body>
+    <body>
+    <div class="container">
+
+        <!-- ÚJ CÍM DOBOZ -->
+        <div id="titleBox">Cím betöltése...</div>
+
+        <!-- MEGLÉVŐ SZÖVEG DOBOZ -->
+        <div id="textBox">Betöltés...</div>
+
+        <div class="buttonRow">
+            <button id="menu_button">Vissza a menübe</button>
+            <button id="nextBtn">Következő</button>
+        </div>
+    </div>
+
+    <script>
+    let pages = [];
+    let index = 0;
+
+    // JSON beolvasása
+    fetch('jatekmezok.json')
+        .then(response => response.json())
+        .then(data => {
+            pages = data;
+            showPage(0);
+        });
+
+    // Oldal megjelenítése
+    function showPage(i) {
+        document.getElementById('titleBox').innerText = pages[i].name;
+        document.getElementById('textBox').innerText = pages[i].desc;
+    }
+
+    // Következő gomb
+    document.getElementById('nextBtn').addEventListener('click', () => {
+        if (pages.length === 0) return;
+        index = (index + 1) % pages.length;
+        showPage(index);
+    });
+
+    // Menü gomb
+    document.getElementById('menu_button').addEventListener('click', () => {
+        window.location.href = "main.html";
+    });
+</script>
+
+    <!-- Videó háttér -->
+  <video id="bg" autoplay muted loop playsinline poster="kepekvideok/background.jpg">
+    <source src="kepekvideok/2297636-uhd_3840_2160_30fps.mp4" type="video/mp4">
+  </video>
+</body>
+</html>

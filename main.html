@@ -65,7 +65,16 @@
 
     // closeProgram
     function closeProgram() {
-      window.close();
+    // Próbálkozik a bezárással
+    window.open('', '_self');
+    window.close();
+
+    // Ha nem sikerül (általában nem engedi)
+    setTimeout(() => {
+        // átdob egy "Kilépés" oldalra vagy a főmenübe
+        window.location.href = "main.html";
+        window.alert("Nem sikerült bezárni az oldalt. Visszairányítunk a főmenübe.");
+    }, 600);
     }
   </script>
 </body>
