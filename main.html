@@ -26,7 +26,7 @@
       <button type="button" onclick="loadGame()" class="menu_button" id="kezdes_button">Játék kezdése</button>
       <button type="button" onclick="loadInstructions()" class="menu_button">Folytatás</button>
       <button type="button" onclick="loadInstructions()" class="menu_button" id="utmutato_button">Útmutató</button>
-      <button type="button" onclick="loadSettings()" class="menu_button">Beállítások</button>
+      <button type="button" onclick="loadSettings()" class="menu_button" id="beallitas_button">Beállítások</button>
       <button type="button" onclick="loadSettings()" class="menu_button">Készítők</button>
       <button type="button" onclick="closeProgram()" class="menu_button">Bezárás</button>
     </div>
@@ -55,6 +55,12 @@
     const utmutatoButton = document.getElementById("utmutato_button");
     utmutatoButton.addEventListener("click", function(){
        window.location.href = "utmutato.html"
+    });
+
+    // loadSettings
+    const beallitasButton = document.getElementById("beallitas_button");
+    beallitasButton.addEventListener("click", function(){
+       window.location.href = "beallitas.html"
     });
 
     // background video lassítás
