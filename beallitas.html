@@ -35,8 +35,8 @@
             <label for="brightness">Fényerő:</label>
             <input type="range" id="brightness" min="0" max="100">
 
-            <label for="autosave">Automatikus játékállás mentés:</label>
-            <input type="range" id="autosave" min="0" max="1">
+            <label for="autosave" hidden></label>                       <!--Automatikus játékállás mentés:-->
+            <input type="range" id="autosave" min="0" max="1" hidden>
 
             <button id="save">Beállítások mentése</button>
             <div id="status"></div>
@@ -60,12 +60,13 @@
         // ha ON (1) → mentse a játékot is
         if (autoSaveState == 1) {
             saveGame();
-            document.getElementById("status").textContent = "Beállítások & játékállás mentve!";
+            document.getElementById("status").textContent = "Beállítások mentve!"; //& játékállás
         } else {
-            document.getElementById("status").textContent = "Beállítások mentve! (Automatikus játékmentés kikapcsolva)";
+            document.getElementById("status").textContent = "Beállítások mentve!"; // (Automatikus játékmentés kikapcsolva)
         }
     }
 
+    
     // játék állapot mentése (game.html tartalom helye később bővíthető)
     function saveGame() {
         const gameData = {
