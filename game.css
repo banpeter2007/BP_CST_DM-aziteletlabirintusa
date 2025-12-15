@@ -81,6 +81,30 @@ button:active {
   transform: scale(1.0);
 }
 
+/* Főzet gombok stílusa */
+.potionButtons {
+    padding: 12px 20px;
+    background: #6a5a4c;
+    color: #f5f5f5;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+    font-family: "MedievalSharp", cursive;
+    letter-spacing: 0.5px;
+    display: none; /* Alapértelmezetten elrejtve */
+}
+
+.potionButton:hover {
+    background: #5a4a3c;
+    transform: scale(1.06);
+}
+
+.potionButton:active {
+    transform: scale(1.0);
+}
+
 /* Mobilbarát */
 @media (max-width: 600px) {
   #textBox {

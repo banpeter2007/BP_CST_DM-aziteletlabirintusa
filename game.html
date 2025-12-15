@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Page - Az ítélet labirintusa</title>
-
     <link rel="stylesheet" href="game.css">
-
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,61 +13,137 @@
 
 <style>
     .saveLabel {
-    display: inline-flex;
-    align-items: center;
-    cursor: pointer;
-}
-
-.saveLabel input {
-    display: none;
-}
-
-.slider {
-    width: 50px;
-    height: 24px;
-    background: #555;
-    border-radius: 20px;
-    position: relative;
-    margin-right: 10px;
-}
-
-.slider::before {
-    content: "";
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    background: white;
-    border-radius: 50%;
-    top: 2px;
-    left: 2px;
-    transition: 0.3s;
-}
-
-.saveLabel input:checked + .slider {
-    background: goldenrod;
-}
-
-.saveLabel input:checked + .slider::before {
-    transform: translateX(26px);
-}
-
-.saveText {
-    color: white;
-    font-family: MedievalSharp;
-}
-
+        display: inline-flex;
+        align-items: center;
+        cursor: pointer;
+    }
+    .saveLabel input {
+        display: none;
+    }
+    .slider {
+        width: 50px;
+        height: 24px;
+        background: #555;
+        border-radius: 20px;
+        position: relative;
+        margin-right: 10px;
+    }
+    .slider::before {
+        content: "";
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background: white;
+        border-radius: 50%;
+        top: 2px;
+        left: 2px;
+        transition: 0.3s;
+    }
+    .saveLabel input:checked + .slider {
+        background: goldenrod;
+    }
+    .saveLabel input:checked + .slider::before {
+        transform: translateX(26px);
+    }
+    .saveText {
+        color: white;
+        font-family: MedievalSharp;
+    }
+    /* Főzet gombok stílusa */
+    .potionButton {
+        padding: 12px 20px;
+        background: #6a5a4c;
+        color: #f5f5f5;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.2s ease, transform 0.2s ease;
+        font-family: "MedievalSharp", cursive;
+        letter-spacing: 0.5px;
+        display: none;
+    }
+    .potionButton:hover {
+        background: #5a4a3c;
+        transform: scale(1.06);
+    }
+    .potionButton:active {
+        transform: scale(1.0);
+    }
+    /* HARCMEZŐ */
+    #battleBox {
+        background: rgba(30, 26, 22, 0.9);
+        padding: 16px 20px;
+        border-radius: 10px;
+        width: 100%;
+        margin-top: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        display: none;
+    }
+    #battleLog {
+        font-size: 16px;
+        line-height: 1.6;
+        margin-bottom: 12px;
+        min-height: 100px;
+        color: #f0d8b8;
+    }
+    #battleStats {
+        display: flex;
+        justify-content: space-between;
+        font-size: 16px;
+        font-weight: bold;
+        color: #ffcc99;
+    }
+    #battleStats div {
+        padding: 6px 10px;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 6px;
+    }
+    #battleNextRound {
+        display: none;
+        margin-top: 10px;
+        background: #8b4513;
+    }
+    #battleNextRound:hover {
+        background: #a0522d;
+    }
+    #continueButton {
+        display: none;
+        margin-top: 10px;
+        background: #4CAF50;
+    }
+    #continueButton:hover {
+        background: #45a049;
+    }
 </style>
 
 <body>
 
 <div class="container">
-
     <div id="titleBox">Cím betöltése...</div>
     <div id="textBox">Betöltés...</div>
+
+    <!-- HARCMEZŐ -->
+    <div id="battleBox">
+        <div id="battleLog"></div>
+        <div id="battleStats">
+            <div>Saját életerő: <span id="playerHP">13</span></div>
+            <div>Ellenfél életerő: <span id="enemyHP">10</span></div>
+        </div>
+        <button id="battleNextRound">Tovább</button>
+        <button id="continueButton">Tovább a történetben</button>
+    </div>
 
     <div class="buttonRow">
         <button id="menu_button">Vissza a menübe</button>
         <div id="nextButtons"></div>
+    </div>
+
+    <!-- FŐZET VÁLASZTÓ GOMBOK (csak 0. oldalon látható) -->
+    <div id="potionButtons" class="buttonRow">
+        <button id="potion1" class="potionButton">Ügyesség Itala</button>
+        <button id="potion2" class="potionButton">Életerő Itala</button>
+        <button id="potion3" class="potionButton">Szerencse Itala</button>
     </div>
 
     <!-- MENTÉS KI/BE CSÚSZKA -->
@@ -80,22 +154,27 @@
             <span class="saveText">Mentés</span>
         </label>
     </div>
-
 </div>
 
 <script>
 let pages = [];
 let currentPageId = 0;
+let battleLogElement = document.getElementById('battleLog');
+let playerHPElement = document.getElementById('playerHP');
+let enemyHPElement = document.getElementById('enemyHP');
+let battleBox = document.getElementById('battleBox');
+let battleNextRound = document.getElementById('battleNextRound');
+let continueButton = document.getElementById('continueButton');
+let currentEnemy = null;
+let enemyDefeated = false;
 
 // JSON betöltése
 fetch('jatekmezok.json')
     .then(response => response.json())
     .then(data => {
         pages = data;
-
         const savedPage = localStorage.getItem("savedPage");
         const saveEnabled = localStorage.getItem("saveEnabled");
-
         if (saveEnabled === "true" && savedPage) {
             showPageById(parseInt(savedPage));
             document.getElementById("saveToggle").checked = true;
@@ -109,17 +188,32 @@ fetch('jatekmezok.json')
 function showPageById(pageId) {
     const page = pages.find(p => p.id === pageId);
     if (!page) return;
-
     currentPageId = pageId;
-
     document.getElementById('titleBox').innerText = page.name;
     document.getElementById('textBox').innerText = page.desc;
-
-    // CSAK ha a mentés be van kapcsolva
     if (localStorage.getItem("saveEnabled") === "true") {
         localStorage.setItem("savedPage", pageId);
     }
-
+    // Főzet gombok megjelenítése/elrejtése
+    const potionButtons = document.getElementById('potionButtons');
+    if (pageId === 0) {
+        potionButtons.style.display = 'flex';
+    } else {
+        potionButtons.style.display = 'none';
+    }
+    // HARCMEZŐ MEGJELENÍTÉSE, HA VAN ELLENFÉL
+    if (page.enemy) {
+        battleBox.style.display = 'block';
+        currentEnemy = {...page.enemy_stats};
+        enemyDefeated = false;
+        continueButton.style.display = 'none';
+        battleNextRound.style.display = 'block';
+        startBattle();
+    } else {
+        battleBox.style.display = 'none';
+        continueButton.style.display = 'none';
+        battleNextRound.style.display = 'none';
+    }
     renderNextButtons(page);
 }
 
@@ -127,11 +221,13 @@ function showPageById(pageId) {
 function renderNextButtons(page) {
     const container = document.getElementById('nextButtons');
     container.innerHTML = "";
-
+    if (page.enemy && !enemyDefeated) {
+        return; // Ne jelenjenek meg a gombok, amíg nem győzött
+    }
     ["next", "next2", "next3", "next4"].forEach(key => {
         if (page[key]) {
             const btn = document.createElement("button");
-            btn.innerText = page[key];
+            btn.innerText = key === "next" ? "Választás" : `Választás ${key.slice(-1)}`;
             btn.onclick = () => showPageById(page[key]);
             container.appendChild(btn);
         }
@@ -153,12 +249,126 @@ document.getElementById("saveToggle").addEventListener("change", (e) => {
 document.getElementById('menu_button').addEventListener('click', () => {
     window.location.href = "main.html";
 });
+
+// Főzet gombok eseménykezelése
+document.getElementById('potion1').addEventListener('click', () => {
+    valasztottItal = italok[0];
+    console.log(`Kiválasztottad: ${valasztottItal.nev}`);
+    alert(`Kiválasztottad: ${valasztottItal.nev}`);
+});
+document.getElementById('potion2').addEventListener('click', () => {
+    valasztottItal = italok[1];
+    console.log(`Kiválasztottad: ${valasztottItal.nev}`);
+    alert(`Kiválasztottad: ${valasztottItal.nev}`);
+});
+document.getElementById('potion3').addEventListener('click', () => {
+    valasztottItal = italok[2];
+    console.log(`Kiválasztottad: ${valasztottItal.nev}`);
+    alert(`Kiválasztottad: ${valasztottItal.nev}`);
+});
+
+// HARC INDÍTÁSA
+function startBattle() {
+    battleLogElement.innerHTML = '';
+    playerHPElement.textContent = eletero;
+    enemyHPElement.textContent = currentEnemy.ÉLETERŐ;
+    battleNextRound.onclick = nextRound;
+}
+
+// KÖVETKEZŐ KÖR
+function nextRound() {
+    let ellenfeltamadoero = currentEnemy.ÜGYESSÉG + Math.floor(Math.random() * 6) + 1 + Math.floor(Math.random() * 6) + 1;
+    let tamadoero = ugyesseg + Math.floor(Math.random() * 6) + 1 + Math.floor(Math.random() * 6) + 1;
+    battleLogElement.innerHTML += `<strong>--- Következő kör ---</strong><br>`;
+    battleLogElement.innerHTML += `Te dobásod: ${tamadoero - ugyesseg} (összesen: ${tamadoero})<br>`;
+    battleLogElement.innerHTML += `Ellenfél dobása: ${ellenfeltamadoero - currentEnemy.ÜGYESSÉG} (összesen: ${ellenfeltamadoero})<br>`;
+    if (tamadoero > ellenfeltamadoero) {
+        battleLogElement.innerHTML += "Te sebzted meg az ellenfelet! (-2)<br>";
+        currentEnemy.ÉLETERŐ -= 2;
+        enemyHPElement.textContent = currentEnemy.ÉLETERŐ;
+    }
+    else if (ellenfeltamadoero > tamadoero) {
+        battleLogElement.innerHTML += "Az ellenfél sebzett meg téged! (-2)<br>";
+        eletero -= 2;
+        playerHPElement.textContent = eletero;
+    }
+    else {
+        battleLogElement.innerHTML += "Kivédtétek egymás csapását!<br>";
+    }
+    battleLogElement.innerHTML += "<br>";
+    if (eletero <= 0 || currentEnemy.ÉLETERŐ <= 0) {
+        if (eletero <= 0) {
+            battleLogElement.innerHTML += "<strong>Vesztettél, az ellenfél legyőzött!</strong>";
+            battleNextRound.style.display = 'none';
+            // TODO: Vége a játéknak
+        } else {
+            battleLogElement.innerHTML += "<strong>Győztél, az ellenfél legyőzve!</strong>";
+            enemyDefeated = true;
+            battleNextRound.style.display = 'none';
+            continueButton.style.display = 'block';
+            renderNextButtons(pages.find(p => p.id === currentPageId));
+        }
+    }
+}
+
+// Tovább a történetben
+continueButton.addEventListener('click', () => {
+    battleBox.style.display = 'none';
+    continueButton.style.display = 'none';
+});
 </script>
 
 <!-- VIDEÓ HÁTTÉR -->
 <video id="bg" autoplay muted loop playsinline poster="kepekvideok/background.jpg">
     <source src="kepekvideok/2297636-uhd_3840_2160_30fps.mp4" type="video/mp4">
 </video>
+
+<script> // HARC STATOK ÉS POTIK
+// Kezdő statok
+let ugyesseg = Math.floor(Math.random() * 6) + 7;
+console.log("Saját ügyesség: " + ugyesseg);
+let kezdetiugyesseg = ugyesseg;
+let eletero = Math.floor(Math.random() * 6) + 13;
+console.log("Saját élető: " + eletero);
+let kezdetieletero = eletero;
+let szerencse = Math.floor(Math.random() * 6) + 7;
+console.log("Saját szerencse: " + szerencse);
+let kezdetiszerencse = szerencse;
+let arany = 20;
+console.log("----------------");
+// Italok definíciója
+const italok = [
+    {
+        nev: "Ügyesség Itala",
+        leiras: "Visszaállítja ÜGYESSÉG pontjaidat a kezdeti értékre.",
+        hatas: () => {
+            ugyesseg = kezdetiugyesseg
+            console.log(`Ügyesség: ${ugyesseg}`);
+        },
+        hasznalatok: 0
+    },
+    {
+        nev: "Életerő Itala",
+        leiras: "Visszaállítja ÉLETERŐ pontjaidat a kezdeti értékre.",
+        hatas: () => {
+            eletero = kezdetieletero
+            console.log(`Életerőd: ${eletero}`);
+         },
+        hasznalatok: 0
+    },
+    {
+        nev: "Szerencse Itala",
+        leiras: "Visszaállítja SZERENCSE pontjaidat a kezdeti értékre, és 1-el megnöveli Kezdeti SZERENCSÉDET.",
+        hatas: () => {
+            kezdetiszerencse += 1;
+            szerencse = kezdetiszerencse;
+            console.log(`Szerencséd: ${szerencse}`);
+        },
+        hasznalatok: 0
+    }
+];
+let valasztottItal = null;
+</script>
 
 </body>
 </html>
