@@ -1,4 +1,10 @@
 [
+    {
+    "id": 0,
+    "name": "oldal0",
+    "next": 1,
+    "desc": "A kaland előtt egy választás áll előtted, mely varázsfőzeted szeretnéd választani. A következők a választások:\n\n1. Ügyesség főzet: Visszaállítja ÜGYESSÉG pontjaidat a kezdeti értékre.\n\n2. Életerő főzet: Visszaállítja ÉLETERŐ pontjaidat a kezdeti értékre.\n\n3. Szerecse főzet:  SZERENCSE pontjaidat a kezdeti értékre, és 1-el megnöveli Kezdeti SZERENCSÉDET."
+  },
   {
     "id": 1,
     "name": "oldal1",
