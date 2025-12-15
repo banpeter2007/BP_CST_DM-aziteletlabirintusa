@@ -83,5 +83,196 @@
     }, 600);
     }
   </script>
+            <button type="button" onclick="loadGame()" class="menu_button">Play</button>
+            <button type="button" onabort="loadInstructions()" class="menu_button">How to Play?</button>
+            <button type="button" onclick="loadSettings()" class="menu_button">Settings</button>
+
+                
+            <script> // A konzol logokat majd nyugodtan törölhetitek, csak csináltam h átlássátok, nem tudom a folyamatot hogyan akarjuk megjeleníteni
+// Kezdő statok
+let ugyesseg = Math.floor(Math.random() * 6) + 7;
+console.log("Saját ügyesség: " + ugyesseg);
+let kezdetiugyesseg = ugyesseg;
+
+let eletero = Math.floor(Math.random() * 6) + 13;
+console.log("Saját élető: " + eletero);
+let kezdetieletero = eletero;
+
+
+let szerencse = Math.floor(Math.random() * 6) + 7;
+console.log("Saját szerencse: " + szerencse);
+let kezdetiszerencse = szerencse;
+
+console.log("----------------");
+
+
+// Italok definíciója
+const italok = [
+    {
+        nev: "Ügyesség Itala",
+        leiras: "Visszaállítja ÜGYESSÉG pontjaidat a kezdeti értékre.",
+        hatas: () => { 
+            ugyesseg = kezdetiugyesseg 
+            console.log(`Ügyesség: ${ugyesseg}`);
+        },
+        hasznalatok: 0
+    },
+    {
+        nev: "Életerő Itala",
+        leiras: "Visszaállítja ÉLETERŐ pontjaidat a kezdeti értékre.",
+        hatas: () => { 
+            let eletero = kezdetieletero
+            console.log(`Életerőd: ${eletero}`);
+         },
+        hasznalatok: 0
+    },
+    {
+        nev: "Szerencse Itala",
+        leiras: "Visszaállítja SZERENCSE pontjaidat a kezdeti értékre, és 1-el megnöveli Kezdeti SZERENCSÉDET.",
+        hatas: () => {
+            kezdetiSzerencse += 1;
+            szerencse = kezdetiSzerencse;
+            console.log(`Szerencséd: ${szerencse}`);
+        },
+        hasznalatok: 0
+    }
+];
+
+// Ital választása
+
+let valasztottItal = null;
+
+function italValasztas() {
+    console.log("\nVálassz egy italt (1-3):");
+    italok.forEach((ital, index) => {
+        console.log(`${index + 1}. ${ital.nev} - ${ital.leiras}`);
+    });
+
+    const valasztas = parseInt(prompt("Add meg az ital számát: ")) - 1;
+    if (valasztas >= 0 && valasztas < italok.length) {
+        valasztottItal = italok[valasztas];
+        console.log(`\nKiválasztottad: ${valasztottItal.nev}`);
+    } else {
+        console.log("Érvénytelen választás!");
+    }
+}
+
+// Ital használata
+function italHasznalat() {
+    if (valasztottItal.hasznalatok >= 2) {
+        console.log("Már már ittál at italból, nincs több adag!");
+        return;
+    }
+
+    valasztottItal.hatas();
+    valasztottItal.hasznalatok += 1;
+    console.log(`\nFelhajtottad a ${valasztottItal.nev}-t!`);
+    console.log(`Új értékeid:`);
+    console.log(`Ügyesség: ${ugyesseg}`);
+    console.log(`Életerő: ${eletero}`);
+    console.log(`Szerencse: ${szerencse}`);
+    console.log(`Hátra lévő adagok: ${2 - valasztottItal.hasznalatok}`);
+}
+
+//italValasztas();               
+        //EZ A LEGELEJÉRE
+
+//italHasznalat();
+        //minden egyes forduló után felajánlani (???)
+
+// Ellenfél statok
+let ellenfeleletero = 10;
+let ellenfelugyesseg = 10;
+
+// Szerencsepróba
+function szerencseProba() {
+    let probaszerencsekocka = Math.floor(Math.random() * 6) + 1 + Math.floor(Math.random() * 6) + 1;
+    if (probaszerencsekocka <= szerencse) {
+        szerencse -= 1;
+        console.log("Sikeres szerencsepróba"); 
+        return true; 
+    } else {
+        console.log("Sikertelen szerencsepróba");
+        return false;
+    }
+}
+
+let probalsze = false // MÉG NINCS AKTIVÁLÁSRA GOMB
+
+// HARC
+while (eletero > 0 && ellenfeleletero > 0) {
+    //támadóerő meghatározás
+    let ellenfeltamadoero = ellenfelugyesseg + Math.floor(Math.random() * 6) + 1 + Math.floor(Math.random() * 6) + 1;
+    let tamadoero = ugyesseg + Math.floor(Math.random() * 6) + 1 + Math.floor(Math.random() * 6) + 1;
+
+    console.log("Te támadóerejed: " + tamadoero);
+    console.log("Ellenfél támadóereje: " + ellenfeltamadoero);
+
+    // támadóerők összehasonlítás
+    if (tamadoero > ellenfeltamadoero) {
+        console.log("Te sebzted meg az ellenfelet!");
+        ellenfeleletero -= 2;
+        console.log("Ellenfél életerő: " + ellenfeleletero);
+
+        
+        if (probalsze) //ha szerencsét próbálsz h többet sebezz
+        {
+            if (szerencseProba()) {
+                console.log("Extra sebzés!");
+                ellenfeleletero -= 2;
+                console.log("Ellenfél életerő: " + ellenfeleletero);
+                probalsze = false
+            }
+
+            else {
+                console.log("karcoltal csak az ellenfélen!");
+                ellenfeleletero += 1;
+                probalsze = false
+            }
+        }
+    }
+
+     else if (ellenfeltamadoero > tamadoero) 
+     {
+        console.log("Az ellenfél sebzett meg téged!");
+        eletero -= 2;
+        console.log("Saját életerő: " + eletero);
+
+            if (probalsze) //ha szerencsét próbálsz h kevesebbet sebezzen
+            {
+             if (szerencseProba())
+              {
+                    console.log("Csökkentett sebzés!");
+                    eletero += 1;
+                    console.log("Saját életerő: " + eletero);
+
+                    probalsze = false
+                }
+                
+             else{
+                    console.log("balszerencse, még 1 sebzés!");
+                    eletero -= 1;
+                    console.log("Saját életerő: " + eletero);
+                    probalsze = false
+                        
+                }
+            }
+    }
+    else {
+        console.log("Kivédtétek egymás csapását következő forduló");
+    }
+
+    console.log("------- Következő forduló ---------");
+}
+                                        
+if (eletero <= 0) {
+    console.log("Vesztettél, az ellenfél legyőzött!");
+} else {
+    console.log("Győztél, az ellenfél legyőzve!");
+}
+            </script>
+        </div>
+        
+    </div>
 </body>
 </html>
