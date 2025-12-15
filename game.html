@@ -85,7 +85,7 @@
 
 <script>
 let pages = [];
-let currentPageId = 1;
+let currentPageId = 0;
 
 // JSON betöltése
 fetch('jatekmezok.json')
@@ -100,7 +100,7 @@ fetch('jatekmezok.json')
             showPageById(parseInt(savedPage));
             document.getElementById("saveToggle").checked = true;
         } else {
-            showPageById(1);
+            showPageById(0);
             document.getElementById("saveToggle").checked = false;
         }
     });
