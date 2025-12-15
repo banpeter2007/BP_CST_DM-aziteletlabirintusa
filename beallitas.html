@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beállítások - Az ítélet labirintusa</title>
+    <link rel="stylesheet" href="beallitas.css">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Videó háttér -->
+    <video id="bg" autoplay muted loop playsinline poster="kepekvideok/background.jpg">
+        <source src="kepekvideok/2297636-uhd_3840_2160_30fps.mp4" type="video/mp4">
+    </video>
+
+    <!-- Új wrap -->
+    <div id="center_wrapper">
+        <div id="settings_container">
+            <h2>Beállítások</h2>
+
+            <label for="volume">Hangerő:</label>
+            <input type="range" id="volume" min="0" max="100">
+
+            <label for="screen">Képernyő méret:</label>
+            <select id="screen">
+                <option>1280×720</option>
+                <option>1920×1080</option>
+                <option>2560×1440</option>
+                <option>4K (3840×2160)</option>
+            </select>
+
+            <label for="brightness">Fényerő:</label>
+            <input type="range" id="brightness" min="0" max="100">
+
+            <label for="autosave" hidden></label>                       <!--Automatikus játékállás mentés:-->
+            <input type="range" id="autosave" min="0" max="1" hidden>
+
+            <button id="save">Beállítások mentése</button>
+            <div id="status"></div>
+
+            <div class="vissza_menu">
+                <button type="button" onclick="loadMenu()" class="menu_button" id="vissza_button">Vissza a menübe</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function saveSettings() {
+        // beállítások mentése
+        localStorage.setItem("volume", document.getElementById("volume").value);
+        localStorage.setItem("screen", document.getElementById("screen").value);
+        localStorage.setItem("brightness", document.getElementById("brightness").value);
+
+        const autoSaveState = document.getElementById("autosave").value;
+        localStorage.setItem("autoSaveEnabled", autoSaveState);
+
+        // ha ON (1) → mentse a játékot is
+        if (autoSaveState == 1) {
+            saveGame();
+            document.getElementById("status").textContent = "Beállítások mentve!"; //& játékállás
+        } else {
+            document.getElementById("status").textContent = "Beállítások mentve!"; // (Automatikus játékmentés kikapcsolva)
+        }
+    }
+
+    
+    // játék állapot mentése (game.html tartalom helye később bővíthető)
+    function saveGame() {
+        const gameData = {
+            time: Date.now(),
+            autoSave: true
+        };
+        localStorage.setItem("gameSave", JSON.stringify(gameData));
+    }
+
+    // betöltéskor visszaállít
+    window.onload = () => {
+        if (localStorage.getItem("volume")) {
+            document.getElementById("volume").value = localStorage.getItem("volume");
+            document.getElementById("screen").value = localStorage.getItem("screen");
+            document.getElementById("brightness").value = localStorage.getItem("brightness");
+        }
+
+        if (localStorage.getItem("autoSaveEnabled")) {
+            document.getElementById("autosave").value = localStorage.getItem("autoSaveEnabled");
+        } else {
+            document.getElementById("autosave").value = 0;
+        }
+    };
+
+    document.getElementById("save").addEventListener("click", saveSettings);
+
+    // loadMenu
+    const visszaButton = document.getElementById("vissza_button");
+    visszaButton.addEventListener("click", function(){
+       window.location.href = "main.html"
+    });
+    // background video lassítás
+    const vid = document.getElementById('bg');
+    vid.addEventListener('loadedmetadata', () => {
+      vid.playbackRate = 0.7; // lassítás
+    });
+    </script>
+</body>
+</html>

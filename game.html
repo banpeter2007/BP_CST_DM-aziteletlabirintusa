@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Page - Az ítélet labirintusa</title>
+
+    <link rel="stylesheet" href="game.css">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+</head>
+
+<style>
+    .saveLabel {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.saveLabel input {
+    display: none;
+}
+
+.slider {
+    width: 50px;
+    height: 24px;
+    background: #555;
+    border-radius: 20px;
+    position: relative;
+    margin-right: 10px;
+}
+
+.slider::before {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    top: 2px;
+    left: 2px;
+    transition: 0.3s;
+}
+
+.saveLabel input:checked + .slider {
+    background: goldenrod;
+}
+
+.saveLabel input:checked + .slider::before {
+    transform: translateX(26px);
+}
+
+.saveText {
+    color: white;
+    font-family: MedievalSharp;
+}
+
+</style>
+
+<body>
+
+<div class="container">
+
+    <div id="titleBox">Cím betöltése...</div>
+    <div id="textBox">Betöltés...</div>
+
+    <div class="buttonRow">
+        <button id="menu_button">Vissza a menübe</button>
+        <div id="nextButtons"></div>
+    </div>
+
+    <!-- MENTÉS KI/BE CSÚSZKA -->
+    <div id="saveContainer">
+        <label class="saveLabel">
+            <input type="checkbox" id="saveToggle">
+            <span class="slider"></span>
+            <span class="saveText">Mentés</span>
+        </label>
+    </div>
+
+</div>
+
+<script>
+let pages = [];
+let currentPageId = 1;
+
+// JSON betöltése
+fetch('jatekmezok.json')
+    .then(response => response.json())
+    .then(data => {
+        pages = data;
+
+        const savedPage = localStorage.getItem("savedPage");
+        const saveEnabled = localStorage.getItem("saveEnabled");
+
+        if (saveEnabled === "true" && savedPage) {
+            showPageById(parseInt(savedPage));
+            document.getElementById("saveToggle").checked = true;
+        } else {
+            showPageById(1);
+            document.getElementById("saveToggle").checked = false;
+        }
+    });
+
+// Oldal megjelenítése
+function showPageById(pageId) {
+    const page = pages.find(p => p.id === pageId);
+    if (!page) return;
+
+    currentPageId = pageId;
+
+    document.getElementById('titleBox').innerText = page.name;
+    document.getElementById('textBox').innerText = page.desc;
+
+    // CSAK ha a mentés be van kapcsolva
+    if (localStorage.getItem("saveEnabled") === "true") {
+        localStorage.setItem("savedPage", pageId);
+    }
+
+    renderNextButtons(page);
+}
+
+// Next gombok
+function renderNextButtons(page) {
+    const container = document.getElementById('nextButtons');
+    container.innerHTML = "";
+
+    ["next", "next2", "next3", "next4"].forEach(key => {
+        if (page[key]) {
+            const btn = document.createElement("button");
+            btn.innerText = page[key];
+            btn.onclick = () => showPageById(page[key]);
+            container.appendChild(btn);
+        }
+    });
+}
+
+// Mentés KI/BE
+document.getElementById("saveToggle").addEventListener("change", (e) => {
+    if (e.target.checked) {
+        localStorage.setItem("saveEnabled", "true");
+        localStorage.setItem("savedPage", currentPageId);
+    } else {
+        localStorage.removeItem("saveEnabled");
+        localStorage.removeItem("savedPage");
+    }
+});
+
+// Menü
+document.getElementById('menu_button').addEventListener('click', () => {
+    window.location.href = "main.html";
+});
+</script>
+
+<!-- VIDEÓ HÁTTÉR -->
+<video id="bg" autoplay muted loop playsinline poster="kepekvideok/background.jpg">
+    <source src="kepekvideok/2297636-uhd_3840_2160_30fps.mp4" type="video/mp4">
+</video>
+
+</body>
+</html>

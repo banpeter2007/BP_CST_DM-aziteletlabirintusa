@@ -1,0 +1,155 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  font-family: "MedievalSharp", cursive;
+  color: rgb(214, 210, 205);
+  text-shadow: 1px 1px 3px black;
+}
+
+/* háttér videó */
+#bg {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: contain;
+  z-index: -1;
+  filter: brightness(0.8);
+}
+
+#settings_container {
+  background: rgba(30, 30, 30, 0.55);
+  border: 2px solid rgba(120, 110, 90, 0.5);
+  border-radius: 10px;
+  padding: 20px 30px;
+  max-width: 420px;
+  width: 90%;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.65);
+}
+
+h2 {
+  font-size: 40px;
+  text-align: center;
+  margin-bottom: 20px;
+  color: rgb(235, 230, 220);
+  text-shadow: 2px 2px 6px black;
+}
+
+label {
+  margin-top: 14px;
+  font-size: 18px;
+  display: block;
+}
+
+input[type="range"] {
+  width: 100%;
+  margin-top: 6px;
+  accent-color: rgb(120, 110, 90);
+}
+
+/* mentés gomb */
+#save {
+  margin-top: 18px;
+  padding: 12px 24px;
+  font-size: 16px;
+  color: rgb(189, 186, 186);
+  background-color: rgb(94, 90, 86);
+  border: none;
+  border-radius: 8px;
+  width: 100%;
+  cursor: pointer;
+  transition: transform 0.2s ease, font-size 0.2s ease, background-color 0.2s ease;
+}
+#save:hover {
+  background-color: rgb(65, 65, 65);
+  transform: scale(1.05);
+  font-size: 17px;
+}
+
+#status {
+  margin-top: 15px;
+  text-align: center;
+  color: rgb(203, 240, 189);
+  font-size: 18px;
+}
+
+@media (max-width: 768px) {
+  #save { font-size: 15px; }
+  h2 { font-size: 32px; }
+  #settings_container { padding: 18px; }
+}
+
+@media (max-width: 480px) {
+  #save { font-size: 14px; padding: 10px 16px; }
+  #bg { display: none; }
+  body {
+    background: url('kepekvideok/background.jpg') no-repeat center center;
+    background-size: cover;
+  }
+}
+
+/* teljes középre igazítás */
+#center_wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  z-index: 2; /* videó fölé hozza */
+}
+
+/* --- NAGY KIJELZŐKRE KICSIT VILÁGOSABB VIDEÓ --- */
+@media (min-width: 1400px) {
+  #bg {
+    filter: brightness(0.75);
+  }
+}
+
+.menu_button {
+  padding: 12px 24px;
+  font-size: 16px;
+  color: rgb(189, 186, 186);
+  font-family: "MedievalSharp", cursive;
+  text-align: center;
+  background-color: rgb(94, 90, 86);
+  border: none;
+  border-radius: 8px;
+  width: 100%;
+  cursor: pointer;
+  transition: transform 0.2s ease, font-size 0.2s ease, background-color 0.2s ease;
+}
+
+.menu_button:hover {
+  background-color: rgb(65, 65, 65);
+  transform: scale(1.05);
+  font-size: 17px;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  h1 { font-size: 48px; }
+  .menu_button { font-size: 15px; padding: 12px 20px; }
+  #bg {
+    object-fit: cover; /* mobilon inkább kitölti a képernyőt */
+    filter: brightness(0.6);
+  }
+}
+
+@media (max-width: 480px) {
+  h1 { font-size: 36px; }
+  .menu_button { font-size: 14px; padding: 10px 16px; }
+  #bg {
+    display: none; /* nagyon kis kijelzőn videó helyett kép */
+  }
+  body {
+    background: url('kepekvideok/background.jpg') no-repeat center center;
+    background-size: cover;
+  }
+}
+
+@media (min-width: 1200px) {
+  .menu { max-width: 600px; }
+  .menu_button { font-size: 18px; padding: 14px 28px; }
+}
