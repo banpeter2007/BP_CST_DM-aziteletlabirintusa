@@ -24,10 +24,10 @@
 
     <div class="menu">
       <button type="button" onclick="loadGame()" class="menu_button" id="kezdes_button">Játék kezdése</button>
-      <button type="button" onclick="loadInstructions()" class="menu_button">Folytatás</button>
+      <!-- <button type="button" onclick="loadInstructions()" class="menu_button">Folytatás</button> -->
       <button type="button" onclick="loadInstructions()" class="menu_button" id="utmutato_button">Útmutató</button>
       <button type="button" onclick="loadSettings()" class="menu_button" id="beallitas_button">Beállítások</button>
-      <button type="button" onclick="loadSettings()" class="menu_button">Készítők</button>
+      <button type="button" onclick="loadCreators()" class="menu_button" id="keszitok_button">Készítők</button>
       <button type="button" onclick="closeProgram()" class="menu_button">Bezárás</button>
     </div>
   </div>
@@ -61,6 +61,12 @@
     const beallitasButton = document.getElementById("beallitas_button");
     beallitasButton.addEventListener("click", function(){
        window.location.href = "beallitas.html"
+    });
+
+    // loadCreators
+    const keszitokButton = document.getElementById("keszitok_button")
+    keszitokButton.addEventListener("click", function(){
+       window.location.href = "creators.html"
     });
 
     // background video lassítás
