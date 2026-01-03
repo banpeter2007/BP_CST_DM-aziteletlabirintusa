@@ -240,21 +240,19 @@
         }
 
         // Next gombok
-        function renderNextButtons(page) {
-            const container = document.getElementById('nextButtons');
-            container.innerHTML = "";
-            if (page.enemy && !enemyDefeated) {
-                return;
-            }
-            ["next", "next2", "next3", "next4"].forEach(key => {
-                if (page[key]) {
-                    const btn = document.createElement("button");
-                    btn.innerText = key === "next" ? "Választás" : `Választás ${key.slice(-1)}`;
-                    btn.onclick = () => showPageById(page[key]);
-                    container.appendChild(btn);
-                }
-            });
+function renderNextButtons(page) {
+    const container = document.getElementById('nextButtons');
+    container.innerHTML = "";
+
+    ["next", "next2", "next3", "next4"].forEach(key => {
+        if (page[key]) {
+            const btn = document.createElement("button");
+            btn.innerText = page[key];
+            btn.onclick = () => showPageById(page[key]);
+            container.appendChild(btn);
         }
+    });
+}
 
         // Mentés KI/BE
         document.getElementById("saveToggle").addEventListener("change", (e) => {
