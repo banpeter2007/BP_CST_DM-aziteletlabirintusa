@@ -59,7 +59,8 @@
             transition: background 0.2s ease, transform 0.2s ease;
             font-family: "MedievalSharp", cursive;
             letter-spacing: 0.5px;
-            display: none;
+            display: block;
+            margin: 5px;
         }
         .potionButton:hover {
             background: #5a4a3c;
@@ -121,9 +122,22 @@
         #luckTryButton:hover {
             background: #a0522d;
         }
+        #drinkPotionButton {
+            display: none;
+            margin-top: 10px;
+            background: #4b0082;
+        }
+        #drinkPotionButton:hover {
+            background: #6a0dad;
+        }
         #battleBox > div:has(#battleNextRound) {
             display: flex;
             justify-content: flex-end;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .buttonRow {
+            display: flex;
             gap: 10px;
             margin-top: 10px;
         }
@@ -146,6 +160,7 @@
                 <button id="battleNextRound">Tovább</button>
                 <button id="luckTryButton">Szerencsepróba</button>
             </div>
+            <button id="drinkPotionButton" style="display: none;">Ital megivása</button>
             <button id="continueButton">Siker! vissza a történethez</button>
         </div>
 
@@ -181,6 +196,7 @@
         let battleNextRound = document.getElementById('battleNextRound');
         let continueButton = document.getElementById('continueButton');
         let luckTryButton = document.getElementById('luckTryButton');
+        let drinkPotionButton = document.getElementById('drinkPotionButton');
         let currentEnemy = null;
         let enemyDefeated = false;
 
@@ -229,30 +245,37 @@
                 } else {
                     luckTryButton.style.display = 'none';
                 }
+                // Ital megivása gomb megjelenítése, ha van kiválasztott ital
+                if (valasztottItal) {
+                    drinkPotionButton.style.display = 'block';
+                } else {
+                    drinkPotionButton.style.display = 'none';
+                }
                 startBattle();
             } else {
                 battleBox.style.display = 'none';
                 continueButton.style.display = 'none';
                 battleNextRound.style.display = 'none';
                 luckTryButton.style.display = 'none';
+                drinkPotionButton.style.display = 'none';
             }
             renderNextButtons(page);
         }
 
         // Next gombok
-function renderNextButtons(page) {
-    const container = document.getElementById('nextButtons');
-    container.innerHTML = "";
+        function renderNextButtons(page) {
+            const container = document.getElementById('nextButtons');
+            container.innerHTML = "";
 
-    ["next", "next2", "next3", "next4"].forEach(key => {
-        if (page[key]) {
-            const btn = document.createElement("button");
-            btn.innerText = page[key];
-            btn.onclick = () => showPageById(page[key]);
-            container.appendChild(btn);
+            ["next", "next2", "next3", "next4"].forEach(key => {
+                if (page[key]) {
+                    const btn = document.createElement("button");
+                    btn.innerText = page[key];
+                    btn.onclick = () => showPageById(page[key]);
+                    container.appendChild(btn);
+                }
+            });
         }
-    });
-}
 
         // Mentés KI/BE
         document.getElementById("saveToggle").addEventListener("change", (e) => {
@@ -274,17 +297,36 @@ function renderNextButtons(page) {
         document.getElementById('potion1').addEventListener('click', () => {
             valasztottItal = italok[0];
             console.log(`Kiválasztottad: ${valasztottItal.nev}`);
-            alert(`Kiválasztottad: ${valasztottItal.nev}`);
+            document.getElementById('potion1').style.display = 'none';
+            document.getElementById('potion2').style.display = 'none';
+            document.getElementById('potion3').style.display = 'none';
         });
+
         document.getElementById('potion2').addEventListener('click', () => {
             valasztottItal = italok[1];
             console.log(`Kiválasztottad: ${valasztottItal.nev}`);
-            alert(`Kiválasztottad: ${valasztottItal.nev}`);
+            document.getElementById('potion1').style.display = 'none';
+            document.getElementById('potion2').style.display = 'none';
+            document.getElementById('potion3').style.display = 'none';
         });
+
         document.getElementById('potion3').addEventListener('click', () => {
             valasztottItal = italok[2];
             console.log(`Kiválasztottad: ${valasztottItal.nev}`);
-            alert(`Kiválasztottad: ${valasztottItal.nev}`);
+            document.getElementById('potion1').style.display = 'none';
+            document.getElementById('potion2').style.display = 'none';
+            document.getElementById('potion3').style.display = 'none';
+        });
+
+        // Ital megivása gomb eseménykezelője
+        drinkPotionButton.addEventListener('click', () => {
+            if (valasztottItal) {
+                valasztottItal.hatas();
+                battleLogElement.innerHTML += `<strong>--- ${valasztottItal.nev} megivása ---</strong><br>`;
+                battleLogElement.innerHTML += `${valasztottItal.leiras}<br><br>`;
+                drinkPotionButton.style.display = 'none';
+                playerHPElement.textContent = eletero;
+            }
         });
 
         // Szerencsepróba gomb eseménykezelője
@@ -294,14 +336,32 @@ function renderNextButtons(page) {
             battleLogElement.innerHTML += `Dobásod: ${luckRoll}<br>`;
             battleLogElement.innerHTML += `Jelenlegi Szerencse: ${szerencse}<br>`;
 
-            if (luckRoll <= szerencse) {
-                battleLogElement.innerHTML += "Szerencséd volt! Komoly sebet ejtettél az ellenfélen! (-4 ÉLETERŐ)<br>";
-                currentEnemy.ÉLETERŐ -= 4;
-                enemyHPElement.textContent = currentEnemy.ÉLETERŐ;
+            // Ellenőrizzük, ki üt a jelenlegi körben
+            let ellenfeltamadoero = currentEnemy.ÜGYESSÉG + Math.floor(Math.random() * 6) + 1 + Math.floor(Math.random() * 6) + 1;
+            let tamadoero = ugyesseg + Math.floor(Math.random() * 6) + 1 + Math.floor(Math.random() * 6) + 1;
+
+            if (tamadoero > ellenfeltamadoero) {
+                // Ha a játékos üt
+                if (luckRoll <= szerencse) {
+                    battleLogElement.innerHTML += "Szerencséd volt! Komoly sebet ejtettél az ellenfélen! (-4 ÉLETERŐ)<br>";
+                    currentEnemy.ÉLETERŐ -= 4;
+                    enemyHPElement.textContent = currentEnemy.ÉLETERŐ;
+                } else {
+                    battleLogElement.innerHTML += "Balszerencséd volt! Csak karcolást ejtettél az ellenfélen! (-1 ÉLETERŐ)<br>";
+                    currentEnemy.ÉLETERŐ -= 1;
+                    enemyHPElement.textContent = currentEnemy.ÉLETERŐ;
+                }
             } else {
-                battleLogElement.innerHTML += "Balszerencséd volt! Csak karcolást ejtettél az ellenfélen! (-1 ÉLETERŐ)<br>";
-                currentEnemy.ÉLETERŐ -= 1;
-                enemyHPElement.textContent = currentEnemy.ÉLETERŐ;
+                // Ha az ellenfél üt
+                if (luckRoll <= szerencse) {
+                    battleLogElement.innerHTML += "Szerencséd volt! Csak 1 pontot vesztesz! (-1 ÉLETERŐ)<br>";
+                    eletero -= 1;
+                    playerHPElement.textContent = eletero;
+                } else {
+                    battleLogElement.innerHTML += "Balszerencséd volt! Komolyabb sebet kaptál! (-3 ÉLETERŐ)<br>";
+                    eletero -= 3;
+                    playerHPElement.textContent = eletero;
+                }
             }
 
             szerencse -= 1;
@@ -319,6 +379,10 @@ function renderNextButtons(page) {
                 luckTryButton.style.display = 'none';
                 continueButton.style.display = 'block';
                 renderNextButtons(pages.find(p => p.id === currentPageId));
+            } else if (eletero <= 0) {
+                battleLogElement.innerHTML += "<strong>Vesztettél, az ellenfél legyőzött!</strong>";
+                battleNextRound.style.display = 'none';
+                luckTryButton.style.display = 'none';
             }
         });
 
