@@ -164,6 +164,13 @@
             <button id="continueButton">Siker! vissza a történethez</button>
         </div>
 
+        <!-- HALÁL ABLAK -->
+        <div id="deathBox" style="display: none; background: rgba(30, 26, 22, 0.9); padding: 16px 20px; border-radius: 10px; width: 100%; margin-top: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); text-align: center;">
+            <h2 style="color: #ffcc99;">Meghaltál!</h2>
+            <p style="color: #f0d8b8;">Az ellenfél legyőzött. Próbáld újra!</p>
+            <button id="returnToMenuButton" style="margin-top: 10px; background: #8b4513; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Vissza a menübe</button>
+        </div>
+
         <div class="buttonRow">
             <button id="menu_button">Vissza a menübe</button>
             <div id="nextButtons"></div>
@@ -383,6 +390,11 @@
                 battleLogElement.innerHTML += "<strong>Vesztettél, az ellenfél legyőzött!</strong>";
                 battleNextRound.style.display = 'none';
                 luckTryButton.style.display = 'none';
+                drinkPotionButton.style.display = 'none';
+                continueButton.style.display = 'none';
+                document.getElementById('deathBox').style.display = 'block';
+                document.getElementById('battleBox').style.display = 'none';
+                document.getElementById('nextButtons').style.display = 'none';
             }
         });
 
@@ -428,6 +440,11 @@
                     battleLogElement.innerHTML += "<strong>Vesztettél, az ellenfél legyőzött!</strong>";
                     battleNextRound.style.display = 'none';
                     luckTryButton.style.display = 'none';
+                    drinkPotionButton.style.display = 'none';
+                    continueButton.style.display = 'none';
+                    document.getElementById('deathBox').style.display = 'block';
+                    document.getElementById('battleBox').style.display = 'none';
+                    document.getElementById('nextButtons').style.display = 'none';
                 } else {
                     battleLogElement.innerHTML += "<strong>Győztél, az ellenfél legyőzve!</strong>";
                     enemyDefeated = true;
@@ -438,6 +455,11 @@
                 }
             }
         }
+
+        // Vissza a menü gomb eseménykezelője a halál ablakban
+        document.getElementById('returnToMenuButton').addEventListener('click', () => {
+            window.location.href = "main.html";
+        });
 
         // Tovább a történetben
         continueButton.addEventListener('click', () => {
