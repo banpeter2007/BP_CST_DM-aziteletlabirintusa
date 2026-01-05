@@ -258,6 +258,8 @@
                 } else {
                     drinkPotionButton.style.display = 'none';
                 }
+                // nextButtons eltüntetése harc alatt
+                document.getElementById('nextButtons').style.display = 'none';
                 startBattle();
             } else {
                 battleBox.style.display = 'none';
@@ -265,6 +267,8 @@
                 battleNextRound.style.display = 'none';
                 luckTryButton.style.display = 'none';
                 drinkPotionButton.style.display = 'none';
+                // nextButtons megjelenítése, ha nincs harc
+                document.getElementById('nextButtons').style.display = 'block';
             }
             renderNextButtons(page);
         }
@@ -451,20 +455,21 @@
                     battleNextRound.style.display = 'none';
                     luckTryButton.style.display = 'none';
                     continueButton.style.display = 'block';
-                    renderNextButtons(pages.find(p => p.id === currentPageId));
                 }
             }
         }
-
-        // Vissza a menü gomb eseménykezelője a halál ablakban
-        document.getElementById('returnToMenuButton').addEventListener('click', () => {
-            window.location.href = "main.html";
-        });
 
         // Tovább a történetben
         continueButton.addEventListener('click', () => {
             battleBox.style.display = 'none';
             continueButton.style.display = 'none';
+            document.getElementById('nextButtons').style.display = 'block';
+            renderNextButtons(pages.find(p => p.id === currentPageId));
+        });
+
+        // Vissza a menü gomb eseménykezelője a halál ablakban
+        document.getElementById('returnToMenuButton').addEventListener('click', () => {
+            window.location.href = "main.html";
         });
     </script>
 
